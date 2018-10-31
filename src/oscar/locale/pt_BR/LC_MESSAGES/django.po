@@ -5069,19 +5069,19 @@ msgstr "Você precisa definir algum método de entrega"
 #: apps/voucher/abstract_models.py:35
 #: templates/oscar/dashboard/vouchers/voucher_set_detail.html:58
 msgid "Number of vouchers"
-msgstr ""
+msgstr "Número de cupons"
 
 #: apps/voucher/abstract_models.py:37
 msgid "Length of Code"
-msgstr ""
+msgstr "Tamanho do Código"
 
 #: apps/voucher/abstract_models.py:52
 msgid "VoucherSet"
-msgstr ""
+msgstr "Cupons em massa"
 
 #: apps/voucher/abstract_models.py:53
 msgid "VoucherSets"
-msgstr ""
+msgstr "Cupons em massa"
 
 #: apps/voucher/abstract_models.py:126
 msgid ""
@@ -5268,7 +5268,7 @@ msgstr "Requisições de alerta de estoque"
 
 #: defaults.py:179
 msgid "Voucher Sets"
-msgstr ""
+msgstr "Cupons em massa"
 
 #: defaults.py:186
 msgid "Content"
@@ -5809,7 +5809,7 @@ msgstr "Nenhum produto encontrado."
 
 #: templates/oscar/catalogue/category.html:16
 msgid "Edit this category"
-msgstr ""
+msgstr "Editar esta categoria"
 
 #: templates/oscar/catalogue/detail.html:68
 msgid "Edit this product"
@@ -6475,7 +6475,7 @@ msgstr "\n<a href=\"%(url)s\">%(title)s</a> está novamente em estoque\n"
 #, python-format
 msgid ""
 "\n"
-"%(title)s is back in stock\n"
+"%(title)s retornado ao estoue\n"
 msgstr ""
 
 #: templates/oscar/customer/anon_order.html:8
@@ -7298,11 +7298,11 @@ msgstr "Necessita de envio"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:28
 msgid "Track stock?"
-msgstr ""
+msgstr "Rastrear estoque?"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:46
 msgid "Edit product type"
-msgstr ""
+msgstr "Editar tipo de produto"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:57
 msgid "There are no product types."
