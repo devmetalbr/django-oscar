@@ -24,7 +24,7 @@ class ConditionalOfferAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('name', 'description', 'offer_type', 'condition',
-                       'benefit', 'start_datetime', 'end_datetime', 'priority')
+                       'benefit', 'start_datetime', 'end_datetime', 'priority', 'image')
         }),
         ('Usage', {
             'fields': ('total_discount', 'num_orders')

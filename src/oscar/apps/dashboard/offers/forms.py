@@ -14,7 +14,7 @@ Benefit = get_model('offer', 'Benefit')
 class MetaDataForm(forms.ModelForm):
     class Meta:
         model = ConditionalOffer
-        fields = ('name', 'description',)
+        fields = ('name', 'description', 'image')
 
 
 class RestrictionsForm(forms.ModelForm):
