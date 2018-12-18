@@ -91,7 +91,11 @@ class AbstractOrder(models.Model):
 
     # Index added to this field for reporting
     date_placed = models.DateTimeField(db_index=True)
-
+    checkout = models.OneToOneField(
+        verbose_name='Checkout do PagSeguro',
+        to='pagseguro.Checkout', blank=True, null=True,
+        on_delete=models.SET_NULL
+    )
     #: Order status pipeline.  This should be a dict where each (key, value) #:
     #: corresponds to a status and a list of possible statuses that can follow
     #: that one.

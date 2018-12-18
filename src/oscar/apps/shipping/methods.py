@@ -51,14 +51,14 @@ class Free(Base):
     This shipping method specifies that shipping is free.
     """
     code = 'free-shipping'
-    name = _('Free shipping')
+    name = _('Sedex')
 
     def calculate(self, basket):
         # If the charge is free then tax must be free (musn't it?) and so we
         # immediately set the tax to zero
         return prices.Price(
             currency=basket.currency,
-            excl_tax=D('0.00'), tax=D('0.00'))
+            excl_tax=D('0.00'), tax=D('1.00'))
 
 
 class NoShippingRequired(Free):
