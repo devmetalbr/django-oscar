@@ -10,12 +10,13 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_class, get_classes
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import get_default_currency, round_half_up
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
 OfferApplications = get_class('offer.results', 'OfferApplications')
+AttributeOption = get_model('catalogue', 'AttributeOption')
 Unavailable = get_class('partner.availability', 'Unavailable')
 LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
 OpenBasketManager, SavedBasketManager = get_classes('basket.managers', ['OpenBasketManager', 'SavedBasketManager'])
@@ -181,7 +182,7 @@ class AbstractBasket(models.Model):
         # them.
         return self.strategy.fetch_for_product(product)
 
-    def add_product(self, product, quantity=1, options=None):
+    def add_product(self, product, quantity=1, attribute_color=None, attribute_size=None, options=None):
         """
         Add a product to the basket
 
@@ -230,6 +231,13 @@ class AbstractBasket(models.Model):
             'price_excl_tax': stock_info.price.excl_tax,
             'price_currency': stock_info.price.currency,
         }
+
+        if attribute_color:
+            defaults['attribute_color'] = AttributeOption.objects.get(pk=attribute_color)
+
+        if attribute_size:
+            defaults['attribute_size'] = AttributeOption.objects.get(pk=attribute_size)
+
         if stock_info.price.is_tax_known:
             defaults['price_incl_tax'] = stock_info.price.incl_tax
 
@@ -646,6 +654,14 @@ class AbstractLine(models.Model):
 
     # Track date of first addition
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    attribute_color = models.ForeignKey(
+        verbose_name=_('Cor'), to='catalogue.AttributeOption', on_delete=models.SET_NULL,
+        blank=True, null=True, related_name='colors'
+    )
+    attribute_size = models.ForeignKey(
+        verbose_name=_('Tamanho'), to='catalogue.AttributeOption', on_delete=models.SET_NULL,
+        blank=True, null=True, related_name='sizes'
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -664,11 +680,15 @@ class AbstractLine(models.Model):
         verbose_name_plural = _('Basket lines')
 
     def __str__(self):
+        cor = self.attribute_color.split[0] if self.attribute_color else ''
+        tam = self.attribute_size if self.attribute_size else ''
         return _(
             "Basket #%(basket_id)d, Product #%(product_id)d, quantity"
-            " %(quantity)d") % {'basket_id': self.basket.pk,
-                                'product_id': self.product.pk,
-                                'quantity': self.quantity}
+            " %(quantity)d %(cor)s %(tam)s") % {'basket_id': self.basket.pk,
+                                                'product_id': self.product.pk,
+                                                'quantity': self.quantity,
+                                                'cor': cor,
+                                                'tam': tam}
 
     def save(self, *args, **kwargs):
         if not self.basket.can_be_edited:
@@ -879,6 +899,16 @@ class AbstractLine(models.Model):
         ops = []
         for attribute in self.attributes.all():
             ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+        if self.attribute_color:
+            try:
+                ops.append("Cor: %s" % self.attribute_color.option.split('#')[0])
+            except Exception as e:
+                print('**************')
+        if self.attribute_size:
+            try:
+                ops.append("Tam: %s" % self.attribute_size.option)
+            except Exception as e:
+                print('**************')
         if ops:
             d = "%s (%s)" % (d, ", ".join(ops))
         return d

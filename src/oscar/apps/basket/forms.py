@@ -104,6 +104,8 @@ class BasketVoucherForm(forms.Form):
 
 class AddToBasketForm(forms.Form):
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
+    attribute_color = forms.IntegerField(initial='', label=_('Cor'))
+    attribute_size = forms.IntegerField(initial='', label=_('Tamanho'))
 
     def __init__(self, basket, product, *args, **kwargs):
         # Note, the product passed in here isn't necessarily the product being
@@ -265,3 +267,5 @@ class SimpleAddToBasketForm(AddToBasketForm):
         if 'quantity' in self.fields:
             self.fields['quantity'].initial = 1
             self.fields['quantity'].widget = forms.HiddenInput()
+            self.fields['attribute_color'].widget = forms.HiddenInput()
+            self.fields['attribute_size'].widget = forms.HiddenInput()
