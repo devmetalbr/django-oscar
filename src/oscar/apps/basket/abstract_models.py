@@ -680,15 +680,11 @@ class AbstractLine(models.Model):
         verbose_name_plural = _('Basket lines')
 
     def __str__(self):
-        cor = self.attribute_color.split[0] if self.attribute_color else ''
-        tam = self.attribute_size if self.attribute_size else ''
         return _(
             "Basket #%(basket_id)d, Product #%(product_id)d, quantity"
-            " %(quantity)d %(cor)s %(tam)s") % {'basket_id': self.basket.pk,
+            " %(quantity)d") % {'basket_id': self.basket.pk,
                                                 'product_id': self.product.pk,
-                                                'quantity': self.quantity,
-                                                'cor': cor,
-                                                'tam': tam}
+                                                'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
         if not self.basket.can_be_edited:
@@ -899,16 +895,16 @@ class AbstractLine(models.Model):
         ops = []
         for attribute in self.attributes.all():
             ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
-        if self.attribute_color:
-            try:
-                ops.append("Cor: %s" % self.attribute_color.option.split('#')[0])
-            except Exception as e:
-                print('**************')
-        if self.attribute_size:
-            try:
-                ops.append("Tam: %s" % self.attribute_size.option)
-            except Exception as e:
-                print('**************')
+        # if self.attribute_color:
+        #     try:
+        #         ops.append("Cor: %s" % self.attribute_color.option.split('#')[0])
+        #     except Exception as e:
+        #         print('**************')
+        # if self.attribute_size:
+        #     try:
+        #         ops.append("Tam: %s" % self.attribute_size.option)
+        #     except Exception as e:
+        #         print('**************')
         if ops:
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
