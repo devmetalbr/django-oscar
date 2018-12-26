@@ -298,7 +298,18 @@ class AbstractProduct(models.Model):
                     "when it is added to a customer's basket.  This could be "
                     "something like a personalised message to be printed on "
                     "a T-shirt."))
-
+    weight = models.FloatField(
+        verbose_name='Peso', blank=True, null=True
+    )
+    height = models.FloatField(
+        verbose_name='Altura', blank=True, null=True
+    )
+    width = models.FloatField(
+        verbose_name='Largura', blank=True, null=True
+    )
+    length = models.FloatField(
+        verbose_name='Comprimento', blank=True, null=True
+    )
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
         verbose_name=_("Recommended products"),
