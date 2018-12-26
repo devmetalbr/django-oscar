@@ -130,7 +130,7 @@ class Pac(Base):
                 tax += D(servico.valor)
         except Exception as e:
             tax = D(0)
-            print('*******ERRO:', e)
+            raise e
 
         return prices.Price(
             currency=basket.currency,
