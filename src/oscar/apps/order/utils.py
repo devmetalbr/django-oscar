@@ -107,8 +107,8 @@ class OrderCreator(object):
                       'currency': total.currency,
                       'total_incl_tax': total.incl_tax,
                       'total_excl_tax': total.excl_tax,
-                      'shipping_incl_tax': shipping_charge.incl_tax,
-                      'shipping_excl_tax': shipping_charge.excl_tax,
+                      'shipping_incl_tax': shipping_charge.get('price').incl_tax,
+                      'shipping_excl_tax': shipping_charge.get('price').excl_tax,
                       'shipping_method': shipping_method.name,
                       'shipping_code': shipping_method.code}
         if shipping_address:
