@@ -550,7 +550,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         # Taxes must be known at this point
         assert basket.is_tax_known, (
             "Basket tax must be set before a user can place an order")
-        assert shipping_charge.is_tax_known, (
+        assert shipping_charge.get('price').is_tax_known, (
             "Shipping charge tax must be set before a user can place an order")
 
         # We generate the order number first as this will be used
