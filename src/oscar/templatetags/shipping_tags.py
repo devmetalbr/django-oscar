@@ -4,12 +4,12 @@ register = template.Library()
 
 
 @register.simple_tag
-def shipping_charge(method, basket):
+def shipping_charge(method, basket, postcode):
     """
     Template tag for calculating the shipping charge for a given shipping
     method and basket, and injecting it into the template context.
     """
-    return method.calculate(basket)
+    return method.calculate(basket, postcode)
 
 
 @register.simple_tag

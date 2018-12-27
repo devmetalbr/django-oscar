@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from oscar.core import prices
 from correios_frete import Package
 from correios_frete.client import Client
-from correios_frete.constants import CAIXA_PACOTE, SEDEX, PAC, SEDEX_10, SEDEX_HOJE
+from correios_frete.constants import CAIXA_PACOTE, SEDEX, PAC
 
 
 class Base(object):
@@ -56,11 +56,12 @@ class Free(Base):
     code = 'free-shipping'
     name = _('Sedex')
 
-    def calculate(self, basket):
+    def calculate(self, basket, postcode='77813-540'):
         # If the charge is free then tax must be free (musn't it?) and so we
         # immediately set the tax to zero
         package = Package(formato=CAIXA_PACOTE)
         tax = D(0)
+        ret = {}
         try:
             for line in basket.lines.all():
                 product = line.product
@@ -78,18 +79,22 @@ class Free(Base):
                             width=width,  # Largura
                             length=length  # Comprimento
                         )
-            client = Client(cep_origem='77813-540')
+            client = Client(cep_origem='31330-130')
             servicos = client.calc_preco_prazo(
-                package, basket.owner.addresses.first().postcode, SEDEX
+                package, postcode, SEDEX
             )
+            ret.update(service=servicos[0])
             for servico in servicos:
                 tax = D(0)
                 tax += D(servico.valor)
         except Exception as e:
             print('*******ERRO:', e)
-        return prices.Price(
+        price = prices.Price(
             currency=basket.currency,
-            excl_tax=D('0.00'), tax=tax)
+            excl_tax=D('0.00'), tax=tax
+        )
+        ret.update(price=price)
+        return ret
 
 
 class Pac(Base):
@@ -99,12 +104,13 @@ class Pac(Base):
     code = 'pac-shipping'
     name = _('PAC')
 
-    def calculate(self, basket):
+    def calculate(self, basket, postcode='77813-540'):
         print(dir(basket))
         # If the charge is free then tax must be free (musn't it?) and so we
         # immediately set the tax to zero
         package = Package(formato=CAIXA_PACOTE)
         tax = D(0)
+        ret = {}
         try:
             for line in basket.lines.all():
                 product = line.product
@@ -124,17 +130,20 @@ class Pac(Base):
                         )
             client = Client(cep_origem='31330-130')
             servicos = client.calc_preco_prazo(
-                package, basket.owner.addresses.first().postcode, PAC
+                package, postcode, PAC
             )
+            ret.update(service=servicos[0])
             for servico in servicos:
                 tax += D(servico.valor)
         except Exception as e:
             tax = D(0)
-            raise e
 
-        return prices.Price(
+        price = prices.Price(
             currency=basket.currency,
-            excl_tax=D('0.00'), tax=tax)
+            excl_tax=D('0.00'), tax=tax
+        )
+        ret.update(price=price)
+        return ret
 
 
 class NoShippingRequired(Free):

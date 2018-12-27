@@ -82,7 +82,7 @@ class Repository(object):
         # If the basket has qualified for shipping discount, wrap the shipping
         # method with a decorating class that applies the offer discount to the
         # shipping charge.
-        charge = method.calculate(basket)
+        charge = method.calculate(basket).get('price')
         if charge.excl_tax == D('0.00'):
             # No need to wrap zero shipping charges
             return method
