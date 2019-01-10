@@ -72,7 +72,6 @@ class Free(Base):
                 if all([weight, height, width, length]):
 
                     for qty in range(line.quantity):
-                        print(qty)
                         package.add_item(
                             weight=weight,  # Peso
                             height=height,  # Altura
@@ -85,7 +84,6 @@ class Free(Base):
             )
             ret.update(service=servicos[0])
             for servico in servicos:
-                tax = D(0)
                 tax += D(servico.valor)
         except Exception as e:
             print('*******ERRO:', e)
@@ -105,36 +103,35 @@ class Pac(Base):
     name = _('PAC')
 
     def calculate(self, basket, postcode='77813-540'):
-        print(dir(basket))
         # If the charge is free then tax must be free (musn't it?) and so we
         # immediately set the tax to zero
         package = Package(formato=CAIXA_PACOTE)
         tax = D(0)
         ret = {}
         try:
-            for line in basket.lines.all():
+            lines = basket.lines.all()
+            for line in lines:
                 product = line.product
                 weight = product.weight
                 height = product.height
                 width = product.width
                 length = product.length
                 if all([weight, height, width, length]):
-
-                    for qty in range(line.quantity):
-                        print(qty)
-                        package.add_item(
-                            weight=weight,  # Peso
-                            height=height,  # Altura
-                            width=width,    # Largura
-                            length=length   # Comprimento
-                        )
-            client = Client(cep_origem='31330-130')
-            servicos = client.calc_preco_prazo(
-                package, postcode, PAC
-            )
-            ret.update(service=servicos[0])
-            for servico in servicos:
-                tax += D(servico.valor)
+                    package.add_item(
+                        weight=weight,  # Peso
+                        height=height,  # Altura
+                        width=width,    # Largura
+                        length=length   # Comprimento
+                    )
+                client = Client(cep_origem='31330-130')
+                servicos = client.calc_preco_prazo(
+                    package, postcode, PAC
+                )
+                ret.update(service=servicos[0])
+                count = 0
+                for servico in servicos:
+                    tax += D(servico.valor) * line.quantity
+            print('TAX', tax)
         except Exception as e:
             tax = D(0)
 
