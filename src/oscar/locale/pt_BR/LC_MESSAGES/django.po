@@ -2028,7 +2028,7 @@ msgstr "Grupo de Opções de Atributos criado com sucesso"
 
 #: apps/dashboard/catalogue/views.py:860
 #, python-format
-msgid "Update Attribute Option Group '%s'"
+msgid "Atualizar Grupo de Opções de Atributos '%s'"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:864
