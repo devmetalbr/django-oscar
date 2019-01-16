@@ -37,7 +37,7 @@ class Repository(object):
         methods = self.get_available_shipping_methods(
             basket=basket, shipping_addr=shipping_addr, **kwargs)
         if basket.has_shipping_discounts:
-            methods = self.apply_shipping_offers(basket, methods)
+            methods = self.apply_shipping_offers(basket, methods, shipping_addr.postcode)
         return methods
 
     def get_default_shipping_method(self, basket, shipping_addr=None,
@@ -65,16 +65,16 @@ class Repository(object):
         """
         return self.methods
 
-    def apply_shipping_offers(self, basket, methods):
+    def apply_shipping_offers(self, basket, methods, postcode):
         """
         Apply shipping offers to the passed set of methods
         """
         # We default to only applying the first shipping discount.
         offer = basket.shipping_discounts[0]['offer']
-        return [self.apply_shipping_offer(basket, method, offer)
+        return [self.apply_shipping_offer(basket, method, offer, postcode)
                 for method in methods]
 
-    def apply_shipping_offer(self, basket, method, offer):
+    def apply_shipping_offer(self, basket, method, offer, postcode):
         """
         Wrap a shipping method with an offer discount wrapper (as long as the
         shipping charge is non-zero).
@@ -82,7 +82,7 @@ class Repository(object):
         # If the basket has qualified for shipping discount, wrap the shipping
         # method with a decorating class that applies the offer discount to the
         # shipping charge.
-        charge = method.calculate(basket).get('price')
+        charge = method.calculate(basket, postcode).get('price')
         if charge.excl_tax == D('0.00'):
             # No need to wrap zero shipping charges
             return method

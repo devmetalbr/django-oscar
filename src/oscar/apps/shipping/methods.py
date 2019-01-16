@@ -56,7 +56,7 @@ class Free(Base):
     code = 'free-shipping'
     name = _('Sedex')
 
-    def calculate(self, basket, postcode='77813-540'):
+    def calculate(self, basket, postcode):
         # If the charge is free then tax must be free (musn't it?) and so we
         # immediately set the tax to zero
         package = Package(formato=CAIXA_PACOTE)
@@ -102,7 +102,7 @@ class Pac(Base):
     code = 'pac-shipping'
     name = _('PAC')
 
-    def calculate(self, basket, postcode='77813-540'):
+    def calculate(self, basket, postcode):
         # If the charge is free then tax must be free (musn't it?) and so we
         # immediately set the tax to zero
         package = Package(formato=CAIXA_PACOTE)
@@ -207,8 +207,8 @@ class OfferDiscount(Base):
     def description(self):
         return self.method.description
 
-    def calculate_excl_discount(self, basket):
-        return self.method.calculate(basket)
+    def calculate_excl_discount(self, basket, postcode=None):
+        return self.method.calculate(basket, postcode)
 
 
 class TaxExclusiveOfferDiscount(OfferDiscount):

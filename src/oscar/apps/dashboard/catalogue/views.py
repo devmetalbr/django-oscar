@@ -858,7 +858,7 @@ class AttributeOptionGroupUpdateView(PopUpWindowUpdateMixin, AttributeOptionGrou
         return attribute_option_group
 
     def get_title(self):
-        return _("Update Attribute Option Group '%s'") % self.object.name
+        return _("Atualizar Grupo de Opções de Atributos '%s'") % self.object.name
 
     def get_success_url(self):
         if not self.is_popup:

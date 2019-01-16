@@ -229,7 +229,7 @@ class CheckoutSessionMixin(object):
         shipping_method = self.get_shipping_method(
             request.basket, shipping_address)
         if shipping_method:
-            shipping_charge = shipping_method.calculate(request.basket)
+            shipping_charge = shipping_method.calculate(request.basket, shipping_address.postcode)
         else:
             # It's unusual to get here as a shipping method should be set by
             # the time this skip-condition is called. In the absence of any
@@ -273,7 +273,7 @@ class CheckoutSessionMixin(object):
         if not shipping_method:
             total = shipping_charge = None
         else:
-            shipping_charge = shipping_method.calculate(basket)
+            shipping_charge = shipping_method.calculate(basket, shipping_address.postcode)
             total = self.get_order_totals(
                 basket, shipping_charge=shipping_charge, **kwargs)
         submission = {
